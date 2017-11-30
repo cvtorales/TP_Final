@@ -1,5 +1,11 @@
+[Cristian2 T]
+id = 12345
+nombre = Cris Thola
+
 [Cristian T]
 id = 86346765
 nombre = Cristian Torales
-amigos = 12,15,65
-mensaje = 1965,1890-05-05,14,Hola Senior T,todo bien
+
+[Senior T]
+id = 97374
+nombre = Senior HOla

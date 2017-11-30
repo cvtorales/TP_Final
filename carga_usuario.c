@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "funciones.h"
+
 #include "common.h"
 #include "funciones.c"
+
+#include "TDA_lista.c"
 
 #define MAX_STR 200
 #define CMP_MENSAJES "mensaje"
@@ -12,18 +14,8 @@
 #define CMP_AMIGOS "amigos"
 #define CMP_NOMBRE "nombre"
 
-typedef char* t_cadena;
-
-typedef struct{
-				int id;
-				t_cadena nombre;
-				t_cadena usuario;
-				/*vector_s amigos;
-				lista_s mensajes;*/
-} usuario_t;
-
-status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr);
-status_t destruir_usuario(usuario_t **usr);
+status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista);
+/*status_t destruir_usuario(usuario_t **usr);*/
 
 
 
@@ -31,23 +23,28 @@ int main (void)
 {
 
   	FILE * archivo;
-  	usuario_t *ptr_usr;
   	status_t st;
+  	lista_t lista;
   	archivo = fopen("usuarios.txt","rt");
+  	/*lista = NULL;*/
+  	
 
 
-  	if((st = procesar_datos_de_usuario(archivo,&ptr_usr)) != ST_OK)
+	TDA_Lista_crear(&lista);
+  	if((st = procesar_datos_de_usuario(archivo, &lista)) != ST_OK)
   	{
   		puts("Error en la funcion procesar datos");
-  		destruir_usuario(&ptr_usr);
+  		/*destruir_usuario(&ptr_usr); HAY QUE DESTRUIR LA LISTA */
   		return EXIT_FAILURE;
   	}
 
-  	puts("Usuario cargado");
-  	printf("ID: %d\nNombre: %s\nUsername: %s\n",ptr_usr->id,ptr_usr->nombre,ptr_usr->usuario );
-  	destruir_usuario(&ptr_usr);
+  	puts("Usuarios cargados");
+  	/*printf("ID: %d\nNombre: %s\nUsername: %s\n",ptr_usr->id,ptr_usr->nombre,ptr_usr->usuario );
+  	destruir_usuario(&ptr_usr);*/
+  	TDA_Lista_recorrer2(lista, &imprimir);
 
   	fclose(archivo);
+  	TDA_Lista_destruir(&lista, &destruir_usuario);
   	
   
 	
@@ -57,7 +54,7 @@ int main (void)
 
 
 
-status_t destruir_usuario(usuario_t **usr)
+/*status_t destruir_usuario(usuario_t **usr)
 {
 	if(!usr)
 		return ST_ERROR_PUNTERO_NULO;
@@ -78,12 +75,12 @@ status_t destruir_usuario(usuario_t **usr)
 	*usr = NULL;
 
 	return ST_OK;	
-}
+}*/
 
-status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
+status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 {
 
-	int n,i, cant_tokens,length,id, aux,length_usr, length_nombre;
+	int n,i, cant_tokens,length,id, aux,length_usr, length_nombre,contador_usuarios;
 /*	char line[MAX_STR];
 */	
 	size_t cant_campos;
@@ -91,17 +88,20 @@ status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
 	char **mensaje_atributos,delimitador; 
 	char usuario_aux[MAX_STR];
 	char * temp, id_aux[5];
-
+	usuario_t *usr;
 	char amigos_aux[MAX_STR], nombre_aux[MAX_STR];
 	size_t cant_amigos;
 	char **amigos;
 
-	if((*usr = (usuario_t *)malloc(sizeof(usuario_t))) == NULL)
-		return ST_ERROR_NO_MEM;
+	contador_usuarios = 0;
 
 	while(fgets(line, MAX_STR ,archivo ) != NULL)
 	{
 		n = strlen(line);
+
+		
+
+
 	
     /*****************************************************/	
 	/*************** Caso de ID **************************/
@@ -124,7 +124,8 @@ status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
 	  		id=aux;
 	  		printf("%d\n",id );
 
-	  		(*usr)->id = id;
+	  		(usr)->id = id;
+	  		printf("Imprimo el ID cargado al usr: %d\n",usr->id);
 	  	}
 
 	
@@ -134,16 +135,18 @@ status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
       if(strncmp(line, CMP_USUARIO, 1) == 0 )
       {
     
+    	if((usr = (usuario_t *)malloc(sizeof(usuario_t))) == NULL)
+			return ST_ERROR_NO_MEM;
         strncpy(usuario_aux, line + 1, n - 2); /* line+1 saltea el 1er corchete, n-2 copia sin incluir el 1er corchete ni el '\n' final*/
     	usuario_aux[n - 3]='\0'; /* n-3 por los 3 caracteres que saque (los dos [] y el '\n'*/
         puts(usuario_aux);
 
         length_usr = strlen(usuario_aux);
-   		if(((*usr)->usuario = (char *)malloc(sizeof(char)*(length_usr+1))) == NULL)
+   		if(((usr)->usuario = (char *)malloc(sizeof(char)*(length_usr+1))) == NULL)
     	return ST_ERROR_NO_MEM;
 
-    	strncpy((*usr)->usuario,usuario_aux,length_usr);
-   		(*usr)->usuario[length_usr] = '\0';
+    	strncpy((usr)->usuario,usuario_aux,length_usr);
+   		(usr)->usuario[length_usr] = '\0';
 
       }
 
@@ -158,11 +161,11 @@ status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
         puts(nombre_aux);
 
         length_nombre = strlen(nombre_aux);
-    	if(((*usr)->nombre = (char *)malloc(sizeof(char)*(length_nombre+1))) == NULL)
+    	if(((usr)->nombre = (char *)malloc(sizeof(char)*(length_nombre+1))) == NULL)
     		return ST_ERROR_NO_MEM;
 
-    	strncpy((*usr)->nombre,nombre_aux,length_nombre);
-    	(*usr)->nombre[length_nombre] = '\0';
+    	strncpy((usr)->nombre,nombre_aux,length_nombre);
+    	(usr)->nombre[length_nombre] = '\0';
 
     } 
 
@@ -230,9 +233,17 @@ status_t procesar_datos_de_usuario(FILE * archivo,usuario_t **usr)
 		  	destruir_arreglo_cadenas(&mensaje_atributos,cant_campos);
   	}
   	/********************************************************/
+  	if(line[0] == '\n')
+  	{
+  		TDA_Lista_insertar_ppio(lista,(void*)usr);
+  		contador_usuarios++;
+  	}
 
 	}
+	TDA_Lista_insertar_ppio(lista,(void*)usr);
+	contador_usuarios++;
 
+	printf("Cantidad de usr: %d\n",contador_usuarios );
 
 	return ST_OK;
 }

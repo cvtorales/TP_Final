@@ -15,11 +15,7 @@ typedef struct{
 } usuario_t;
 
 typedef enum{TRUE=0,
-			 FALSE=1} bool_t;
-
-typedef enum{ST_ERROR_PUNTERO_NULO,
-			 ST_ERROR_MEMORIA_INSUFICIENTE,
-			 ST_OK} status_t;
+			 FALSE=1} bool_t; 
 
 bool_t   TDA_Lista_vacios(lista_t);
 status_t TDA_Lista_crear(lista_t *);
