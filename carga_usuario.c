@@ -192,9 +192,35 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 	    }*/
 	    delimitador = ',';
 	    split(amigos_aux,delimitador,&amigos,&cant_amigos);
+	    if((vector_enteros = malloc(sizeof(int)*cant_amigos)) == NULL)
+	    	return ST_ERROR_NO_MEM;
 	    for(i=0;i<cant_amigos;i++)
 	    {
 	      printf("%s\n",amigos[i]);
+
+
+	      aux = strtol(amigos[i], &temp, 10);
+	  		if( *temp && *temp != '\n')
+	  		{
+	  			fclose(archivo);
+
+	  			return ST_ERROR_VALIDACION_ID;
+	  		}
+
+	  		/*id=aux;*/
+	  		/*printf("%d\n",id );*/
+	  		vector_enteros[i] = aux;
+	  	}
+	  		(usr)->id = id;
+	  		printf("Imprimo el ID cargado al usr: %d\n",usr->id);
+
+
+
+
+
+
+
+
 	    }
 	    destruir_arreglo_cadenas(&amigos,cant_amigos);
 
