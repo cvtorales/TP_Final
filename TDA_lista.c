@@ -163,10 +163,14 @@ nodo_t * TDA_Lista_siguiente(nodo_t * nodo)
 void imprimir(void *dato)
 {
 	usuario_t* aux;
+	int i;
 	aux = (usuario_t *)dato;
     printf("ID: %d\n",aux->id);
     printf("Nombre: %s\n",aux->nombre);
     printf("Username: %s\n",aux->usuario);
+    printf("Amigos:\n");
+    for (i=0;i<(aux->amigos->used_size);i++)
+    	printf("%d\n",aux->amigos->amigos[i]);
 }
 
 /* destructor solo de prueba*/
@@ -177,6 +181,22 @@ void destruir_cadena (void *dato)
 	cadena =(char *)dato;
 	free(cadena);
 	cadena = NULL;
+}
+
+status_t TDA_Vector_amigos_destruir(TDA_vector_s ** vector)
+{
+		if (vector == NULL)
+			return ST_ERROR_PUNTERO_NULO;
+		if((*vector)->amigos != NULL)
+		{
+			free((*vector)->amigos);
+			(*vector)->amigos = NULL;
+		}
+
+		free(*vector);
+		*vector = NULL;
+
+		return ST_OK;
 }
 
 status_t destruir_usuario(void *dato)
@@ -198,6 +218,8 @@ status_t destruir_usuario(void *dato)
 		free((usr)->nombre);
 		(usr)->nombre = NULL;
 	}
+
+	TDA_Vector_amigos_destruir(&(usr->amigos));
 
 	free(usr);
 	usr = NULL;

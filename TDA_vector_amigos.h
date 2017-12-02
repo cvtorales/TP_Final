@@ -1,47 +1,15 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "TDA_vector_amigos.h"
-
-
-
-
-
-
-
-/*int main (void)
+typedef struct
 {
+	size_t used_size;
+	size_t alloc_size;
+	int * amigos;
+}TDA_vector_s;
 
-
-  	TDA_vector_s * tda_vector;
-  	int *dato;
-  	int l, i;
-  	l=4;
-
-  	dato = (int*)malloc(sizeof(int)*l);
-  	dato[0] = 12;
-  	dato[1] = 13;
-  	dato[2] = 14;
-  	dato[3] = 15;
-
-  	if(TDA_Vector_amigos_cargar(&tda_vector, l, dato) != ST_OK)
-  	{
-  		TDA_Vector_amigos_destruir(&tda_vector);
-
-  		return EXIT_FAILURE; 	
-  	}
-
-  	for(i=0; i < l ; i++)
-  	{
-  	 	printf("El vector es: %d\n", tda_vector->amigos[i]);
-  	}
-	
-	TDA_Vector_amigos_destruir(&tda_vector);
-	free(dato);
-
-	return EXIT_SUCCESS;
-}*/
-
+/********************* PROTOTIPOS *************************************************/
+status_t TDA_Vector_amigos_crear(TDA_vector_s ** vector);
+status_t TDA_Vector_amigos_cargar(TDA_vector_s ** vector, int l, int * dato);
+status_t TDA_Vector_amigos_destruir(TDA_vector_s ** vector);
+/**********************************************************************************/
 
 status_t TDA_Vector_amigos_crear(TDA_vector_s ** vector)
 {

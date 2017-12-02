@@ -1,11 +1,17 @@
 [Cristian2 T]
 id = 12345
 nombre = Cris Thola
+amigos = 22,54
+mensaje = 1965,1809-04-15,23,Estoy probando un mensaje
+mensaje = 2005,1456-05-26,18,Este es un segundo mensaje
 
 [Cristian T]
 id = 86346765
 nombre = Cristian Torales
+amigos = 88,44,55
 
 [Senior T]
 id = 97374
 nombre = Senior HOla
+amigos = 1236,1,28
+mensaje = 4658,1958-06-05,88,Este es un mensaje en otro usuario
