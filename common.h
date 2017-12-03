@@ -19,3 +19,11 @@ typedef enum {
 
 
 #endif
+
+#define MAX_STR 200
+#define CMP_MENSAJES "mensaje"
+#define CMP_NOMBRE_ID "id"
+#define CMP_USUARIO "["
+#define CMP_USUARIO_DELIMITADOR "]"
+#define CMP_AMIGOS "amigos"
+#define CMP_NOMBRE "nombre"

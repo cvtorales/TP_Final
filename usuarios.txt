@@ -9,6 +9,7 @@ mensaje = 2005,1456-05-26,18,Este es un segundo mensaje
 id = 86346765
 nombre = Cristian Torales
 amigos = 88,44,55
+mensaje = 2005,1456-05-26,18,nuevo mensaje
 
 [Senior T]
 id = 97374

@@ -170,6 +170,7 @@ void imprimir(void *dato)
     printf("Amigos:\n");
     for (i=0;i<(aux->amigos->used_size);i++)
     	printf("%d\n",aux->amigos->amigos[i]);
+    
     TDA_Lista_recorrer2(aux->mensajes, &imprimir_mensajes);
 }
 
