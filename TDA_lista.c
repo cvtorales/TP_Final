@@ -1,6 +1,5 @@
 
 #include "TDA_lista.h"
-
 bool_t   TDA_Lista_vacios(lista_t lista)
 {
 	return lista==NULL;
@@ -171,9 +170,19 @@ void imprimir(void *dato)
     printf("Amigos:\n");
     for (i=0;i<(aux->amigos->used_size);i++)
     	printf("%d\n",aux->amigos->amigos[i]);
+    TDA_Lista_recorrer2(aux->mensajes, &imprimir_mensajes);
 }
 
-/* destructor solo de prueba*/
+void imprimir_mensajes(void *dato)
+{
+	mensaje_t* aux;
+	aux = (mensaje_t *)dato;
+	printf("Mensaje_t\n");
+	printf("Id mensaje: %d\n",aux->id_mensaje );
+	printf("Fecha: %s\n",aux->str_time );
+	printf("Id usuario: %d\n",aux->id_usuario );
+	printf("Mensaje util: %s\n",aux->str_mensaje );
+}
 
 void destruir_cadena (void *dato)
 {
@@ -183,20 +192,19 @@ void destruir_cadena (void *dato)
 	cadena = NULL;
 }
 
-status_t TDA_Vector_amigos_destruir(TDA_vector_s ** vector)
+
+status_t destruir_struct_mensaje(void *dato)
 {
-		if (vector == NULL)
-			return ST_ERROR_PUNTERO_NULO;
-		if((*vector)->amigos != NULL)
-		{
-			free((*vector)->amigos);
-			(*vector)->amigos = NULL;
-		}
+	mensaje_t* mensaje;
+	mensaje = (mensaje_t *)dato;
 
-		free(*vector);
-		*vector = NULL;
+	if(!mensaje)
+		return ST_ERROR_PUNTERO_NULO;
 
-		return ST_OK;
+	free(mensaje);
+	mensaje = NULL;
+
+	return ST_OK;
 }
 
 status_t destruir_usuario(void *dato)
@@ -220,6 +228,7 @@ status_t destruir_usuario(void *dato)
 	}
 
 	TDA_Vector_amigos_destruir(&(usr->amigos));
+	TDA_Lista_destruir(&(usr->mensajes),&destruir_struct_mensaje);
 
 	free(usr);
 	usr = NULL;

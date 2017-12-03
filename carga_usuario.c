@@ -3,8 +3,9 @@
 #include <stdlib.h>
 
 #include "common.h"
-#include "TDA_lista.h"
-#include "funciones.h"
+#include "TDA_lista.c"
+#include "funciones.c"
+#include "TDA_vector_amigos.c"
 
 
 
