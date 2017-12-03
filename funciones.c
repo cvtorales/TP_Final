@@ -322,3 +322,44 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 
 	return ST_OK;
 }
+
+status_t eliminar_usuarios_por_id(char * argv[CMD_POS_ID], nodo_t * red)
+{
+	
+	
+	if( argv == NULL || red == NULL)
+		return ST_ERROR_PUNTERO_NULO;
+	
+	TDA_Lista_recorrer(red,&eliminar_usuario_por_id,(void *)(argv[CMD_POS_ID]));
+
+	return ST_OK;
+}
+
+void eliminar_usuario_por_id(void** dato1,void *argv[CMD_POS_ID])
+{
+	usuario_t * usr;
+ 	char * cmp;
+ 	int aux;
+ 	char *id_aux[5];
+ 	char * temp;
+
+ 	/* id_aux = (char*)argv[CMD_POS_ID]; */
+  	^/* usr = (usuario_t**)dato1;  */ 
+	
+	if(!dato1 || !argv[CMD_POS_ID])
+		return;
+    
+    aux = strtol(id_aux, &temp, 10);
+    if( *temp && *temp != '\n')
+      	return;
+	
+	if((cmp=comparar_usuarios_por_id(*dato1,argv[CMD_POS_ID]))==0) /* los id son iguales */
+		return;
+
+	if((cmp=comparar_usuarios_por_id(*dato1,argv[CMD_POS_ID]))==1)
+	{
+		destruir_usuario(*dato1)
+	}
+
+	return;
+}	
