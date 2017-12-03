@@ -6,6 +6,7 @@
 #include "funciones.c"
 
 #include "TDA_lista.c"
+#include "TDA_vector_amigos.c"
 
 #define MAX_STR 200
 #define CMP_MENSAJES "mensaje"
@@ -44,12 +45,20 @@ int main (void)
   	puts("Usuarios cargados");
   	/*printf("ID: %d\nNombre: %s\nUsername: %s\n",ptr_usr->id,ptr_usr->nombre,ptr_usr->usuario );
   	destruir_usuario(&ptr_usr);*/
-  	
-    TDA_Lista_recorrer2(lista, &imprimir);
+    puts("Aca antes a la funcion para imprimir a la salida");
+   /* 
+    if((TDA_Lista_recorrer2(lista, &imprimir))!= ST_OK)
+    {
+        fclose(salida);
+        fclose(entrada);
 
-  	if((cargar_archivo_salida(&salida,lista))!=ST_OK);	
+        fprintf(stderr, "ERROR al imprimir lista\n");
+        return EXIT_FAILURE;
+    }
+*/
+    puts("Aca entro a la funcion para imprimir a la salida");
+  	cargar_archivo_salida(&salida,lista);
 
-	       fclose(entrada);
   	
   fclose(salida);
   fclose(entrada);
@@ -63,9 +72,9 @@ status_t cargar_archivo_salida(FILE ** archivo, nodo_t * red)
 {
 	
 	
-	if(!archivo || !red)
+	if( archivo == NULL || red == NULL)
 		return ST_ERROR_PUNTERO_NULO;
-
+	printf( "estoy en la funcion para cargar archivos de salida \n");
 	TDA_Lista_recorrer(red,&imprimir_usuarios,(void*)(*archivo));
 
 	
@@ -84,7 +93,8 @@ void imprimir_usuarios(void* dato,void *salida)
 	if(!dato)
 		return;
      /* usr es un puntero a una estructura de un usuario */
-	fprintf(aux,"[%s]\n",usr->usuario);
+	fprintf(aux,"%s%s%s\n",CMP_USUARIO, usr->usuario, CMP_USUARIO_DELIMITADOR);
+	fprintf(aux,"id = %d\n",usr->id);
 
 }
 
