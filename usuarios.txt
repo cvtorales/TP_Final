@@ -1,17 +1,17 @@
-[Cristian2 T]
+[Cristian2_T]
 id = 1234
 nombre = Cris Thola
 amigos = 22,54
 mensaje = 1965,1809-04-15,23,Estoy probando un mensaje
 mensaje = 2005,1456-05-26,18,Este es un segundo mensaje
 
-[Cristian T]
+[Cristian_T]
 id = 86346765
 nombre = Cristian Torales
 amigos = 88,44,55
 mensaje = 2005,1456-05-26,18,nuevo mensaje
 
-[Senior T]
+[Senior_T]
 id = 97374
 nombre = Senior HOla
 amigos = 1236,1,28

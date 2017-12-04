@@ -19,9 +19,10 @@
 #define FILTRO_USUARIO 'u'
 #define OPCION_SALIDA "-o"
 #define MAX_ID_LENGTH 10
+#define MAX_USUARIO_LENGTH 40
 
 status_t cargar_archivo_salida(FILE ** archivo, nodo_t* red);
-status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line);
+status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line,char *opcion);
 void imprimir_usuarios(void* red,void *salida);
 void imprimir_mensajes_salida(void *dato, void * archivo);
 
@@ -30,18 +31,18 @@ int main (int argc, char *argv[])
 
     FILE * archivo;
     FILE * salida;
-    char *delete;
+    char *delete,opcion;
     status_t st;
     lista_t lista;
 
-    if((st = validar_argumentos(argc,argv,&archivo,&delete))!=ST_OK)
+    if((st = validar_argumentos(argc,argv,&archivo,&delete,&opcion))!=ST_OK)
     {
     fprintf(stderr, MSJ_ERROR_VALIDACION);
     return EXIT_FAILURE;
     }
     salida = fopen("salida.txt","wt");
 
-  TDA_Lista_crear(&lista);
+    TDA_Lista_crear(&lista);
     if((st = procesar_datos_de_usuario(archivo, &lista)) != ST_OK)
     {
       puts("Error en la funcion procesar datos");
@@ -52,7 +53,10 @@ int main (int argc, char *argv[])
     puts("Usuarios cargados");
     
     TDA_Lista_recorrer2(lista, &imprimir);
-    eliminar_usuarios_por_id(delete,lista);
+    if(opcion == FILTRO_ID)
+      eliminar_usuarios_por_id(delete,lista);
+    if(opcion == FILTRO_USUARIO)
+      eliminar_usuarios_por_nombre_usuario(delete,lista);
     puts("Aca entro a la funcion para imprimir a la salida");
     cargar_archivo_salida(&salida,lista);
     free(delete);
@@ -119,7 +123,7 @@ void imprimir_mensajes_salida(void *dato, void * archivo)
   fprintf(archivo, "mensaje = %d,%s,%d,%s",aux->id_mensaje, aux->str_time, aux->id_usuario,aux->str_mensaje);
 }
 
-status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line)
+status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line,char *opcion)
 {
   if( !argv )
   {
@@ -140,12 +144,14 @@ status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line)
   {
     *line=(char *)malloc(sizeof(char)*(MAX_ID_LENGTH+1));
     strcpy(*line,argv[POSICION_FILTRO]+2);
+    *opcion = FILTRO_ID;
   }
 
   if(*(argv[POSICION_FILTRO]) == FILTRO_USUARIO)
   {
-    *line=(char *)malloc(sizeof(char)*(MAX_ID_LENGTH+1));
+    *line=(char *)malloc(sizeof(char)*(MAX_USUARIO_LENGTH+1));
     strcpy(*line,argv[POSICION_FILTRO]+2);
+    *opcion = FILTRO_USUARIO;
   }
 
   if((strcmp(argv[POSICION_SALIDA],OPCION_SALIDA)) )
