@@ -27,3 +27,5 @@ typedef enum {
 #define CMP_USUARIO_DELIMITADOR "]"
 #define CMP_AMIGOS "amigos"
 #define CMP_NOMBRE "nombre"
+
+#define	CMD_POS_ID 2

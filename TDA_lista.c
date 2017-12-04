@@ -116,17 +116,18 @@ void * lista_buscar(lista_t plista, void *t, int(*cmp)(void*,void*))
 	return (aux_recorrer==NULL)?NULL: aux_recorrer->dato;
 }
 
+/*
 int comparar_usuarios_por_id(void *dato1,void *dato2)
 {
 	usuario_t *usr1,*usr2;
 	usr1 =(usuario_t *)dato1;
 	usr2 =(usuario_t *)dato2;
 
-	if(usr1->id == usr2->id) /*si los id son iguales devuelve 0*/
+	if(usr1->id == usr2->id)    si los id son iguales devuelve 0
 		return 0;
-	return 1; /* si los id son diferentes devuelve 1*/
+	return 1;       si los id son diferentes devuelve 1
 }
-
+*/
 status_t  TDA_Lista_recorrer(lista_t lista, void(*pf)(void*,void*),void*arg)
 {
 	if(lista==NULL||pf==NULL)
