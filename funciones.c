@@ -329,8 +329,8 @@ status_t eliminar_usuarios_por_id(char * delete_id, nodo_t * red)
 	
 	if( delete_id == NULL || red == NULL)
 		return ST_ERROR_PUNTERO_NULO;
-	
-	TDA_Lista_recorrer3(red,&eliminar_usuario_por_id,(void *)delete_id);
+	printf("Entre a eliminar_usuarios_por_id\n");
+	TDA_Lista_recorrer3(red,&comparar_usuarios_por_id,(void *)delete_id);
 
 	return ST_OK;
 }
@@ -344,8 +344,8 @@ void eliminar_usuario_por_id(void** dato1,void * delete_id)
  	char * id_aux;
  	char * temp;
 
- 	 id_aux = (char*)delete_id; 
-  usr = (usuario_t*)(*dato1);   
+ 	id_aux = (char*)delete_id;
+  	usr = (usuario_t*)(*dato1);   
 	
 	if(!dato1 || !delete_id)
 		return;
@@ -365,15 +365,46 @@ void eliminar_usuario_por_id(void** dato1,void * delete_id)
 	return;
 }	
 
-status_t  TDA_Lista_recorrer3(lista_t lista, void(*pf)(void**,void*),void*arg)
+status_t  TDA_Lista_recorrer3(lista_t lista, int(*pf)(void*,void*),void *delete_id)
 {
+	/*usuario_t * usr;*/
+	lista_t aux_recorrer,aux_eliminar,anterior;
+	int cmp;
+ 	int aux,i;
+	char * id_aux;
+ 	char * temp;
+ 	printf("Entre a TDA_Lista_recorrer3\n");
+ 	id_aux = (char*)delete_id;
+ 	aux_recorrer = lista;
+	
 	if(lista==NULL||pf==NULL)
 		return ST_ERROR_PUNTERO_NULO;
 
-	while(lista!=NULL)
+	aux = strtol(id_aux, &temp, 10);
+    if( *temp && *temp != '\n')
+      	return ST_ERROR_VALIDACION_ID;
+    printf("Converti la cadena a entero: %d\n",aux );
+    i=0;
+    anterior = lista;
+	while(aux_recorrer!=NULL)
 	{
-		(*pf)(&(lista->dato),arg);
-		lista=lista->sig;
+		cmp = (*pf)((aux_recorrer->dato),(void *)(&aux)); /* esta pdria ser la que se pasa por pf */
+		/*(*pf)(&(lista->dato),arg);*/
+		printf("El cmp numero %d vale %d\n",i,cmp );
+		if(!cmp)
+		{
+			aux_eliminar = aux_recorrer;
+			anterior->sig = aux_recorrer->sig;
+			TDA_Lista_destruir_nodo(&aux_eliminar,&destruir_usuario);
+			aux_recorrer=anterior->sig;
+			anterior = aux_recorrer;
+		}else
+		{
+			anterior = aux_recorrer;
+			aux_recorrer=aux_recorrer->sig;
+		}
+		
+		i++;
 	}
 	return ST_OK;
 }

@@ -1,5 +1,5 @@
 [Cristian2 T]
-id = 12345
+id = 1234
 nombre = Cris Thola
 amigos = 22,54
 mensaje = 1965,1809-04-15,23,Estoy probando un mensaje
