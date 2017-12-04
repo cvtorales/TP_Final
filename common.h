@@ -32,3 +32,17 @@ typedef enum {
 #define CMP_NOMBRE "nombre"
 
 #define	CMD_POS_ID 2
+
+#define MSJ_ERROR_VALIDACION "Error en la validacion de los argumentos"
+#define POSICION_OPCION 1
+#define POSICION_FILTRO 2
+#define POSICION_SALIDA 3
+#define POSICION_ARCHIVO_ENTRADA 5
+
+#define OPCION_ELIMINAR_LARGA "--eliminar"
+#define OPCION_ELIMINAR_CORTA "-e"
+#define FILTRO_ID 'i'
+#define FILTRO_USUARIO 'u'
+#define OPCION_SALIDA "-o"
+#define MAX_ID_LENGTH 10
+#define MAX_USUARIO_LENGTH 40

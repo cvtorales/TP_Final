@@ -16,6 +16,11 @@ status_t  TDA_Lista_recorrer3(lista_t *lista, int(*pf)(void*,void*),void *delete
 status_t  TDA_Lista_recorrer4(lista_t lista, int(*pf)(void*,void*),void *delete_usrname);
 status_t destruir_usuario2(void *dato);
 
+status_t cargar_archivo_salida(FILE ** archivo, nodo_t* red);
+status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line,char *opcion);
+void imprimir_usuarios(void* red,void *salida);
+void imprimir_mensajes_salida(void *dato, void * archivo);
+
 /**********************************************************************************/
 
 

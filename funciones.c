@@ -130,8 +130,8 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
   			strncpy(id_aux, line + 5, n - 4);
   		
 			line[n-1]='\0';
-  			puts(id_aux);
-
+  		/*	puts(id_aux);
+*/
 	  		aux = strtol(id_aux, &temp, 10);
 	  		if( *temp && *temp != '\n')
 	  		{
@@ -141,10 +141,10 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 	  		}
 
 	  		id=aux;
-	  		printf("%d\n",id );
-
+	  	/*	printf("%d\n",id );
+*/
 	  		(usr)->id = id;
-	  		printf("Imprimo el ID cargado al usr: %d\n",usr->id);
+	  /*		printf("Imprimo el ID cargado al usr: %d\n",usr->id); */
 	  	}
 
 	
@@ -159,7 +159,7 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 		usr->mensajes = NULL; /* inicializo en esta parte, porque es donde creo la estructura */
         strncpy(usuario_aux, line + 1, n - 2); /* line+1 saltea el 1er corchete, n-2 copia sin incluir el 1er corchete ni el '\n' final*/
     	usuario_aux[n - 3]='\0'; /* n-3 por los 3 caracteres que saque (los dos [] y el '\n'*/
-        puts(usuario_aux);
+       /* puts(usuario_aux);*/
 
         length_usr = strlen(usuario_aux);
    		if(((usr)->usuario = (char *)malloc(sizeof(char)*(length_usr+1))) == NULL)
@@ -178,7 +178,7 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
     
         strncpy(nombre_aux, line + 9, n - 10); /*line+9 saltea la etiqueta nombre = ,n-10 copia sin incluir dicha etiqueta ni '\n' final*/
     	nombre_aux[n-10]='\0';
-        puts(nombre_aux);
+        /*puts(nombre_aux);*/
 
         length_nombre = strlen(nombre_aux);
     	if(((usr)->nombre = (char *)malloc(sizeof(char)*(length_nombre+1))) == NULL)
@@ -199,7 +199,7 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
   		strncpy(amigos_aux,line+9, n - 8);
 	   
 	     /*line[n-1]='\0';*/
-	    puts(amigos_aux);
+	  /*  puts(amigos_aux);*/
 
 	    
 
@@ -216,8 +216,8 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 	    	return ST_ERROR_NO_MEM;
 	    for(i=0;i<cant_amigos;i++)
 	    {
-	      printf("%s\n",amigos[i]);
-
+	      /*printf("%s\n",amigos[i]);
+*/
 
 	     	aux = strtol(amigos[i], &temp, 10);
 	  		if( *temp && *temp != '\n')
@@ -252,7 +252,7 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
   	{
   		strncpy(mensajes_aux,line+10, n - 9);
 
-  		  	puts(mensajes_aux);
+  		  /*	puts(mensajes_aux);*/
   			delimitador = ',';
   			length=0;
     		for(i=0,cant_tokens=0; mensajes_aux[i] && cant_tokens<3; i++) 
@@ -263,19 +263,19 @@ status_t procesar_datos_de_usuario(FILE * archivo, lista_t * lista)
 		      	}
 		      length++;
 		    }
-		    printf("Longitud hasta que empiece el mensaje util: %d\n",length );
+		  /*  printf("Longitud hasta que empiece el mensaje util: %d\n",length );*/
 		    strncpy(cadena1,mensajes_aux,length);
 		    cadena1[length-1]='\0';
 		    n = strlen(mensajes_aux);
 		    strncpy(cadena2,mensajes_aux+length,n-length);
 		    cadena2[n-length]='\0';
-		    puts(cadena1);
-		    puts(cadena2);
+		  /*  puts(cadena1);
+		    puts(cadena2);*/
 		  	split(cadena1,delimitador,&mensaje_atributos,&cant_campos);
-		  	for(i=0;i<cant_campos;i++)
+		  /*	for(i=0;i<cant_campos;i++)
 		  	{
 		  		printf("%s\n",mensaje_atributos[i]);
-		  	}
+		  	}*/
 
 		  	/* Creo la lista de mensajes */
 		  	if((usr->mensajes) == NULL)
@@ -490,4 +490,103 @@ status_t eliminar_usuarios_por_nombre_usuario(char * delete_usrname, nodo_t * re
 	TDA_Lista_recorrer4(red,&comparar_usuarios_por_nombre_usuario,(void *)delete_usrname);
 
 	return ST_OK;
+}
+
+
+status_t cargar_archivo_salida(FILE ** archivo, nodo_t * red)
+{
+  
+  
+  if( archivo == NULL || red == NULL)
+    return ST_ERROR_PUNTERO_NULO;
+
+  TDA_Lista_recorrer(red,&imprimir_usuarios,(void*)(*archivo));
+
+  
+
+
+  return ST_OK;
+}
+
+void imprimir_usuarios(void* dato, void *salida)
+{
+  usuario_t * usr;
+  FILE *aux;
+  int i;
+
+  aux = (FILE*)salida;
+    usr = (usuario_t*)dato;
+  if(!dato)
+    return;
+     /* usr es un puntero a una estructura de un usuario */
+  fprintf(aux,"%s%s%s\n",CMP_USUARIO, usr->usuario, CMP_USUARIO_DELIMITADOR);
+  fprintf(aux,"id = %d\n",usr->id);
+
+    fprintf(aux,"nombre = %s\n",usr->nombre);
+  /*  fprintf(aux,"Username: %s\n",aux->usuario);  */
+    fprintf(aux,"amigos = ");
+    for (i=0; i<(usr->amigos->used_size); i++)
+    {
+      if(((usr->amigos->used_size) -1));
+        fprintf(aux,"%d,",usr->amigos->amigos[i]);
+
+      if(i==((usr->amigos->used_size) -1))
+        fprintf(aux,"%d\n",usr->amigos->amigos[i]); 
+    }
+
+    
+  TDA_Lista_recorrer(usr->mensajes, &imprimir_mensajes_salida, aux);
+    fprintf(aux,"\n");  
+}
+
+void imprimir_mensajes_salida(void *dato, void * archivo)
+{
+  mensaje_t* aux;
+
+  aux = (mensaje_t *)dato;
+  fprintf(archivo, "mensaje = %d,%s,%d,%s",aux->id_mensaje, aux->str_time, aux->id_usuario,aux->str_mensaje);
+}
+
+status_t validar_argumentos(int argc, char *argv[], FILE **fentrada,char **line,char *opcion)
+{
+  if( !argv )
+  {
+    return ST_ERROR_PUNTERO_NULO;
+  }
+
+  if((strcmp(argv[POSICION_OPCION],OPCION_ELIMINAR_LARGA)) && (strcmp(argv[POSICION_OPCION],OPCION_ELIMINAR_CORTA)) )
+  {
+    return ST_ERROR_ARGUMENTO_OPCION;
+  }
+
+  if((*(argv[POSICION_FILTRO]) != FILTRO_ID) && (*(argv[POSICION_FILTRO]) != FILTRO_USUARIO) ) 
+  {
+    return ST_ERROR_ARGUMENTO_FILTRO;
+  }
+
+  if(*(argv[POSICION_FILTRO]) == FILTRO_ID)
+  {
+    *line=(char *)malloc(sizeof(char)*(MAX_ID_LENGTH+1));
+    strcpy(*line,argv[POSICION_FILTRO]+2);
+    *opcion = FILTRO_ID;
+  }
+
+  if(*(argv[POSICION_FILTRO]) == FILTRO_USUARIO)
+  {
+    *line=(char *)malloc(sizeof(char)*(MAX_USUARIO_LENGTH+1));
+    strcpy(*line,argv[POSICION_FILTRO]+2);
+    *opcion = FILTRO_USUARIO;
+  }
+
+  if((strcmp(argv[POSICION_SALIDA],OPCION_SALIDA)) )
+  {
+    return ST_ERROR_ARGUMENTO_SALIDA;
+  }
+
+  if((*fentrada = fopen(argv[POSICION_ARCHIVO_ENTRADA],"rt"))==NULL)
+  {
+    return ST_ERROR_APERTURA_ARCHIVO;
+  }
+
+  return ST_OK;
 }
